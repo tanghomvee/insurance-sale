@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 @Service
 @Slf4j
@@ -89,5 +90,11 @@ public class AppointmentServiceImpl extends BaseServiceImpl<Appointment , Long> 
     @Override
     public Long countExpired(Long sale) {
         return appointmentDao.countExpired(sale);
+    }
+
+    @Override
+    @Transactional
+    public Integer expired(Date date) {
+        return appointmentDao.expired(date);
     }
 }

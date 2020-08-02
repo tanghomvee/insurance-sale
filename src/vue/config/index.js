@@ -38,6 +38,11 @@ module.exports = {
             // secure: false,
             changeOrigin: true
         },
+       "/pricemsg/**":{
+            target:"http://localhost/",
+            // secure: false,
+            changeOrigin: true
+        },
        "/appointment/**":{
             target:"http://localhost/",
             // secure: false,

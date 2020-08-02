@@ -11,5 +11,4 @@ public class SaleManVO extends BaseVO {
     private String bankNum;
     private String idNum;
 
-
 }

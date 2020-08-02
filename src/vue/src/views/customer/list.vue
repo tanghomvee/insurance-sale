@@ -79,7 +79,7 @@
 					<el-input type="input" v-model="detailForm.addr" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="短信记录" >
-					<el-input type="textarea" :rows="8" v-model="detailForm.addr" :disabled="true"></el-input>
+					<el-input type="textarea" :rows="8" v-model="detailForm.smsMsg" :disabled="true"></el-input>
 				</el-form-item>
 			</el-form>
 			<!--预约记录-->
@@ -125,6 +125,7 @@
     import NProgress from 'nprogress';
 	import {
 		addAppointment,
+		getPriceMsg,
 		listCustomer
 	} from '../../api/api';
 
@@ -161,7 +162,8 @@
 					licenseDate:"",
 					company:"",
 					finalInsDate:"",
-					addr:""
+					addr:"",
+					smsMsg:""
 				},
 
 				appointmentFormRules: {
@@ -223,9 +225,16 @@
 
 			//显示新增界面
 			showAppointmentForm: function (index , row) {
-				this.detailFormVisible = true;
-				this.detailForm = Object.assign({}, row);
-				this.detailForm["carId"]=row["id"];
+            	let _this = this;
+				_this.detailFormVisible = true;
+				_this.detailForm = Object.assign({}, row);
+				_this.detailForm["carId"]=row["id"];
+				getPriceMsg({"frameNo":row.frameNo} , _this).then((res)=>{
+					if(!res){
+						return;
+					}
+					_this.$set(_this.detailForm,"smsMsg",res.data.content);
+				})
 			},
 			//新增
 			addAppointment: function () {

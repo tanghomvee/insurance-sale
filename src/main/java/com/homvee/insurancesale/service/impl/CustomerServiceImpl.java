@@ -10,8 +10,6 @@ import com.homvee.insurancesale.vos.PageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,22 +23,10 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer,Long> implemen
     private CustomerDao customerDao;
 
     @Override
-    public PageVO<CustomerVO> list(CustomerVO vo, Integer pageNum, Integer pageSize) {
+    public PageVO<CustomerVO> list(CustomerVO vo,Long saleManId, Integer pageNum, Integer pageSize) {
         Pageable pageReq = build(pageNum, pageSize);
-        Customer data = new Customer();
-        BeanUtils.copyProperties(vo , data);
-        data.setYn(YNEnum.YES.getVal());
 
-        Example<Customer> cond = Example.of(data, ExampleMatcher.matching()
-                .withIgnoreNullValues()
-                .withIgnorePaths("crateTime")
-                .withMatcher("carNo", ExampleMatcher.GenericPropertyMatchers.exact())
-                .withMatcher("ownerName", ExampleMatcher.GenericPropertyMatchers.exact())
-                .withMatcher("phoneNum", ExampleMatcher.GenericPropertyMatchers.exact())
-                .withMatcher("yn", ExampleMatcher.GenericPropertyMatchers.exact())
-        );
-
-        Page<Customer> all = customerDao.findAll(cond ,pageReq);
+        Page<Customer> all =  customerDao.listNotAppointmentCustomer(vo,saleManId,pageReq);
 
         PageVO<CustomerVO> pages = convert2PageVo(all , new Function<Customer, CustomerVO>() {
             @NullableDecl
@@ -51,6 +37,11 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer,Long> implemen
                 return dataVO;
             }
         });
+
+
+
+
+
         return pages;
     }
 

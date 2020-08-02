@@ -83,3 +83,7 @@ export const countAppointment = (params,caller) => {
 export const expiredAppointment = (params,caller) => {
     return ajax("/appointment/expired"  , "GET" , null ,params , caller);
 };
+
+export const getPriceMsg = (params,caller) => {
+    return ajax("/pricemsg/get"  , "GET" , null ,params , caller);
+};

@@ -4,6 +4,8 @@ import com.homvee.insurancesale.dao.entities.Appointment;
 import com.homvee.insurancesale.vos.AppointmentVO;
 import com.homvee.insurancesale.vos.PageVO;
 
+import java.util.Date;
+
 public interface AppointmentService extends BaseService<Appointment, Long> {
 
     Long save(AppointmentVO vo);
@@ -16,4 +18,5 @@ public interface AppointmentService extends BaseService<Appointment, Long> {
 
     Long countExpired(Long sale);
 
+    Integer expired(Date date);
 }

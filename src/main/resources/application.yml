@@ -25,3 +25,6 @@ logging:
   level:
     root: info
 
+task:
+  #间隔5分钟
+  cron: 0 */5 * * * ?

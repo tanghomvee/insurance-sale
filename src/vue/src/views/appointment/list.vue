@@ -1,7 +1,7 @@
 <template>
 	<section>
 		<!--工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;" >
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
 					<el-input v-model="filters.ownerName" placeholder="姓名"></el-input>
@@ -24,13 +24,15 @@
 								v-for="tag in tags"
 								:key="tag.txt"
 								:type="tag.type"
-								effect="dark">
-							{{key}}
+								effect="dark"
+								style="margin-left: 5px;height: 35px;line-height: 35px;">
+							{{tag.txt}}
 						</el-tag>
 					</div>
 				</el-form-item>
 
 			</el-form>
+
 
 		</el-col>
 
@@ -97,7 +99,7 @@
 					<el-input type="input" v-model="detailForm.addr" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="短信记录" >
-					<el-input type="textarea" :rows="8" v-model="detailForm.addr" :disabled="true"></el-input>
+					<el-input type="textarea" :rows="8" v-model="detailForm.smsMsg" :disabled="true"></el-input>
 				</el-form-item>
 			</el-form>
 			<!--预约记录-->
@@ -146,6 +148,7 @@
 		oneCustomer,
 		countAppointment,
 		expiredAppointment,
+			getPriceMsg,
 		listAppointment
 	} from '../../api/api';
 
@@ -165,6 +168,7 @@
 					{value:"FAIL_PURCHASED",label:"已购买"},
 					{value:"FAIL_NOT_RECOGNIZED",label:"不认可"},
 					{value:"FINISHED",label:"完成出单"},
+					{value:"EXPIRED",label:"已过期"},
 				],
                 contents: [],
 				total: 0,
@@ -184,7 +188,8 @@
 					licenseDate:"",
 					company:"",
 					finalInsDate:"",
-					addr:""
+					addr:"",
+					smsMsg:""
 				},
 
 				appointmentFormRules: {
@@ -256,6 +261,14 @@
 					_this.detailFormVisible = true;
 					_this.detailForm = Object.assign({}, res.data) ;
 				});
+
+				getPriceMsg({"frameNo":row.frameNo} , _this).then((res)=>{
+					if(!res){
+						return;
+					}
+					_this.$set(_this.detailForm,"smsMsg",res.data.content);
+
+				})
 			},
 			//新增
 			addAppointment: function () {
@@ -292,25 +305,25 @@
 					if(!res){
 						return;
 					}
-					_this.tags[0] = {type:"danger",txt:"今天到期:"+ res.data+" 条"}
+					_this.$set(_this.tags,0,{type:"danger",txt:"今天到期:"+ res.data+" 条"});
 				});
             	countAppointment({delta:1} , _this).then(function (res) {
 					if(!res){
 						return;
 					}
-					_this.tags[1] = {type:"warning",txt:"明天到期:"+ res.data+" 条"};
+					_this.$set(_this.tags,1,{type:"warning",txt:"明天到期:"+ res.data+" 条"});
 				});
             	countAppointment({delta:2} , _this).then(function (res) {
 					if(!res){
 						return;
 					}
-					_this.tags[2] = {type:"success",txt:"后天到期:"+ res.data+" 条"};
+					_this.$set(_this.tags,2,{type:"success",txt:"后天到期:"+ res.data+" 条"});
 				});
             	expiredAppointment({} , _this).then(function (res) {
 					if(!res){
 						return;
 					}
-					_this.tags[3] = {type:"success",txt:"已经过期:"+ res.data+" 条"};
+					_this.$set(_this.tags,3,{type:"info",txt:"已经过期:"+ res.data+" 条"});
 				});
 			}
 		},

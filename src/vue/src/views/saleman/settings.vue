@@ -10,7 +10,7 @@
 		</el-form-item>
 
 		<el-form-item prop="realName" label="姓名">
-			<el-input type="text" v-model="settingForm.realName" auto-complete="off" placeholder="姓名" ></el-input>
+			<el-input type="text" v-model="settingForm.realName" auto-complete="off" placeholder="姓名" :disabled="true"></el-input>
 		</el-form-item>
 		<el-form-item prop="createTime" label="开户时间">
 			<el-input type="text" v-model="settingForm.createTime" auto-complete="off" placeholder="开户时间" :disabled="true"></el-input>
@@ -67,7 +67,7 @@
                     newPwd: [
                         { required: true, message: '请输入新密码', trigger: 'blur' }
                     ],
-                    phoneNum: [
+                    /*phoneNum: [
                         { required: true, message: '请输入11位手机号码', trigger: 'blur' },
                         {
                             validator: function (rule, val, callback) {
@@ -80,7 +80,7 @@
 							message: '请输入11位手机号码',
 							trigger: 'blur'
                         }
-                    ],
+                    ],*/
                     reNewPwd: [
                         { required: true, message: '请再次输入新密码', trigger: 'blur' }
                     ]
@@ -93,7 +93,7 @@
                 this.$refs.settingForm.resetFields();
             },
             submitFun:function(ev) {
-                var _this = this;
+                let _this = this;
                 this.$refs.settingForm.validate((valid) => {
                     if (valid) {
                         if (this.settingForm.newPwd != this.settingForm.reNewPwd){
@@ -102,12 +102,12 @@
 						}
                         this.logining = true;
                         NProgress.start();
-                        var loginParams = { userName: this.settingForm.account,
+                        let loginParams = { userName: this.settingForm.account,
                             // oldPwd: util.Encryption.RSA.encrypt(this.settingForm.oldPwd) ,
                             // newPwd: util.Encryption.RSA.encrypt(this.settingForm.newPwd) ,
                             // reNewPwd: util.Encryption.RSA.encrypt(this.settingForm.reNewPwd)
-                            oldPwd: this.settingForm.oldPwd,
-                            newPwd: this.settingForm.newPwd,
+                            oldPwd: util.Encryption.RSA.encrypt(this.settingForm.oldPwd),
+                            newPwd: util.Encryption.RSA.encrypt(this.settingForm.newPwd),
                         };
                         setting(loginParams , _this).then(resp => {
                             this.logining = false;

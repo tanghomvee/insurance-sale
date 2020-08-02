@@ -61,7 +61,20 @@ public class SaleManCtrl extends BaseCtrl {
         if (StringUtils.isEmpty(oldPwd)){
             return Msg.error("请输入原始密码");
         }
-        String pwd = newPwd;
+        String pwd = oldPwd;
+        try {
+            pwd = EncryptionEnum.RSA.decode(pwd);
+            pwd = EncryptionEnum.MD5_2_BASE64.encrypt(pwd);
+            if (!pwd.equals(getUser().getUserPwd())){
+                return Msg.error("原始密码错误");
+            }
+        } catch (Exception e) {
+            log.error("解密错误:pwd={}" , pwd ,e);
+            return Msg.error("密码错误");
+        }
+
+
+        pwd = newPwd;
         try {
             pwd = EncryptionEnum.RSA.decode(pwd);
             pwd = EncryptionEnum.MD5_2_BASE64.encrypt(pwd);

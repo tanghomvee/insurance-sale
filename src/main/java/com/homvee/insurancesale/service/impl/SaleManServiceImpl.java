@@ -10,6 +10,7 @@ import com.homvee.insurancesale.vos.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -34,6 +35,7 @@ public class SaleManServiceImpl extends BaseServiceImpl<SaleMan,Long> implements
     }
 
     @Override
+    @Transactional
     public int modifyPwdById(String newPwd, Long id) {
         return saleManDao.modifyUserPwdById(newPwd , id);
     }
