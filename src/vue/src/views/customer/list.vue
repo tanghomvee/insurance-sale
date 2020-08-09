@@ -75,12 +75,12 @@
 				<el-form-item label="到期日期">
 					<el-input type="input" v-model="detailForm.finalInsDate" :disabled="true"></el-input>
 				</el-form-item>
-				<el-form-item label="地址" >
+				<!--<el-form-item label="地址" >
 					<el-input type="input" v-model="detailForm.addr" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="短信记录" >
 					<el-input type="textarea" :rows="8" v-model="detailForm.smsMsg" :disabled="true"></el-input>
-				</el-form-item>
+				</el-form-item>-->
 			</el-form>
 			<!--预约记录-->
 			<el-form :model="appointmentForm" label-width="80px" :rules="appointmentFormRules" ref="appointmentForm">
@@ -97,12 +97,17 @@
 				</el-form-item>
 
 				<el-form-item label="预约时间" prop="appointmentDate">
-					<el-date-picker
+					<!--<el-date-picker
 							v-model="appointmentForm.appointmentDate"
 							type="datetimerange"
 							range-separator="至"
 							start-placeholder="开始日期"
 							end-placeholder="结束日期">
+					</el-date-picker>-->
+					<el-date-picker
+							v-model="appointmentForm.appointmentDate"
+							type="datetime"
+							placeholder="选择日期时间">
 					</el-date-picker>
 				</el-form-item>
 
@@ -178,7 +183,7 @@
 					]
 				},
 				appointmentForm:{
-					appointmentDate:[/*this.appointmentForm.startDate,this.appointmentForm.endDate*/],
+					appointmentDate:"",
 					carNo:"",
 					frameNo:"",
 					ownerName:"",
@@ -241,8 +246,8 @@
                 let _this = this;
 				this.$refs.appointmentForm.validate((valid) => {
 					if (valid) {
-						_this.appointmentForm.startDate = _this.appointmentForm.appointmentDate[0];
-						_this.appointmentForm.endDate = _this.appointmentForm.appointmentDate[1];
+						// _this.appointmentForm.startDate = _this.appointmentForm.appointmentDate[0];
+						// _this.appointmentForm.endDate = _this.appointmentForm.appointmentDate[1];
 						_this.appointmentForm.carId = _this.detailForm.id;
 						_this.appointmentForm.carNo = _this.detailForm.carNo;
 						_this.appointmentForm.frameNo = _this.detailForm.frameNo;
@@ -267,7 +272,7 @@
 			}
 		},
 		mounted() {
-			this.getContents();
+			// this.getContents();
 		}
 	}
 

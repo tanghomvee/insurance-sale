@@ -43,17 +43,19 @@ public class AppointmentServiceImpl extends BaseServiceImpl<Appointment , Long> 
         BeanUtils.copyProperties(vo , data);
         data.setYn(YNEnum.YES.getVal());
 
-        Example<Appointment> cond = Example.of(data, ExampleMatcher.matching()
-                .withIgnoreNullValues()
-                .withIgnorePaths("crateTime")
-                .withMatcher("carNo", ExampleMatcher.GenericPropertyMatchers.exact())
-                .withMatcher("ownerName", ExampleMatcher.GenericPropertyMatchers.exact())
-                .withMatcher("phoneNum", ExampleMatcher.GenericPropertyMatchers.exact())
-                .withMatcher("saleManId", ExampleMatcher.GenericPropertyMatchers.exact())
-                .withMatcher("yn", ExampleMatcher.GenericPropertyMatchers.exact())
-        );
-
-        Page<Appointment> all = appointmentDao.findAll(cond ,pageReq);
+//        Example<Appointment> cond = Example.of(data, ExampleMatcher.matching()
+//                .withIgnoreNullValues()
+//                .withIgnorePaths("crateTime")
+//                .withMatcher("carNo", ExampleMatcher.GenericPropertyMatchers.exact())
+//                .withMatcher("ownerName", ExampleMatcher.GenericPropertyMatchers.exact())
+//                .withMatcher("phoneNum", ExampleMatcher.GenericPropertyMatchers.exact())
+//                .withMatcher("saleManId", ExampleMatcher.GenericPropertyMatchers.exact())
+//                .withMatcher("yn", ExampleMatcher.GenericPropertyMatchers.exact())
+//                .withMatcher("appointmentDate", ExampleMatcher.GenericPropertyMatchers.exact())
+//        );
+//
+//        Page<Appointment> all = appointmentDao.findAll(cond ,pageReq);
+        Page<Appointment> all = appointmentDao.listPage(vo ,pageReq);
 
         PageVO<AppointmentVO> pages = convert2PageVo(all , new Function<Appointment, AppointmentVO>() {
             @NullableDecl
@@ -72,8 +74,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<Appointment , Long> 
     @Override
     public Integer edit(AppointmentVO vo) {
         Appointment appointment =  appointmentDao.getOne(vo.getId());
-        appointment.setStartDate(vo.getStartDate());
-        appointment.setEndDate(vo.getEndDate());
+        appointment.setAppointmentDate(vo.getAppointmentDate());
         appointment.setState(vo.getState());
         appointment.setNote(vo.getNote());
         vo.setChangeTime(DateTime.now().toDate());
@@ -84,7 +85,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<Appointment , Long> 
     @Override
     public Long count(AppointmentVO vo) {
 
-        return appointmentDao.countAppointment(vo.getEndDate(),vo.getSaleManId());
+        return appointmentDao.countAppointment(vo.getAppointmentDate(),vo.getSaleManId());
     }
 
     @Override

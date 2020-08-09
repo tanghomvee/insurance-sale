@@ -31,6 +31,7 @@ public class AppointmentVO extends BaseVO {
     private Date startDate;
     /**预约结束时间*/
     private Date endDate;
+    private Date appointmentDate;
     /**预约备注*/
     private String note;
 }

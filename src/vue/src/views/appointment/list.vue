@@ -25,7 +25,8 @@
 								:key="tag.txt"
 								:type="tag.type"
 								effect="dark"
-								style="margin-left: 5px;height: 35px;line-height: 35px;">
+								style="margin-left: 5px;height: 35px;line-height: 35px;"
+								@click.native="search(tag)">
 							{{tag.txt}}
 						</el-tag>
 					</div>
@@ -95,12 +96,12 @@
 				<el-form-item label="到期日期">
 					<el-input type="input" v-model="detailForm.finalInsDate" :disabled="true"></el-input>
 				</el-form-item>
-				<el-form-item label="地址" >
+				<!--<el-form-item label="地址" >
 					<el-input type="input" v-model="detailForm.addr" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="短信记录" >
 					<el-input type="textarea" :rows="8" v-model="detailForm.smsMsg" :disabled="true"></el-input>
-				</el-form-item>
+				</el-form-item>-->
 			</el-form>
 			<!--预约记录-->
 			<el-form :model="appointmentForm" label-width="80px" :rules="appointmentFormRules" ref="appointmentForm">
@@ -117,12 +118,17 @@
 				</el-form-item>
 
 				<el-form-item label="预约时间" prop="appointmentDate">
-					<el-date-picker
+					<!--<el-date-picker
 							v-model="appointmentForm.appointmentDate"
 							type="datetimerange"
 							range-separator="至"
 							start-placeholder="开始日期"
 							end-placeholder="结束日期">
+					</el-date-picker>-->
+					<el-date-picker
+							v-model="appointmentForm.appointmentDate"
+							type="datetime"
+							placeholder="选择日期时间">
 					</el-date-picker>
 				</el-form-item>
 
@@ -158,9 +164,14 @@
 				filters: {
 					carNo:null,
 					ownerName:null,
-                    phoneNum: null
+                    phoneNum: null,
+					appointmentDate:null,
+					state:null
 				},
-				tags:[],
+				tags:[{type:"danger",txt:"今天到期: 0 条"},
+					{type:"warning",txt:"明天到期: 0 条"},
+					{type:"success",txt:"后天到期: 0 条"},
+					{type:"info",txt:"已经到期: 0 条"}],
 				states:[
 					{value:"SUCCESS",label:"预约成功"},
 					{value:"FAIL_BUSY",label:"客户繁忙"},
@@ -204,7 +215,7 @@
 					]
 				},
 				appointmentForm:{
-					appointmentDate:[/*this.appointmentForm.startDate,this.appointmentForm.endDate*/],
+					appointmentDate:null,
 					carNo:"",
 					frameNo:"",
 					ownerName:"",
@@ -235,6 +246,9 @@
 					carNo: this.filters.carNo,
 					phoneNum: this.filters.phoneNum,
 					ownerName: this.filters.ownerName,
+					appointmentDate:this.filters.appointmentDate,
+					state:this.filters.state,
+
 				};
 				this.listLoading = true;
 				NProgress.start();
@@ -253,7 +267,7 @@
 			showAppointmentForm: function (index , row) {
 				let _this = this;
 				_this.appointmentForm = Object.assign({}, row);
-				_this.appointmentForm.appointmentDate= [_this.appointmentForm.startDate,_this.appointmentForm.endDate];
+				//_this.appointmentForm.appointmentDate= [_this.appointmentForm.startDate,_this.appointmentForm.endDate];
 				oneCustomer({id:row.carId} , _this).then(function (res) {
 					if(!res){
 						return;
@@ -305,26 +319,37 @@
 					if(!res){
 						return;
 					}
-					_this.$set(_this.tags,0,{type:"danger",txt:"今天到期:"+ res.data+" 条"});
+					_this.$set(_this.tags,0,{type:"danger",txt:"今天到期:"+ res.data+" 条",appointmentDate:new Date()});
 				});
             	countAppointment({delta:1} , _this).then(function (res) {
 					if(!res){
 						return;
 					}
-					_this.$set(_this.tags,1,{type:"warning",txt:"明天到期:"+ res.data+" 条"});
+					let appointmentDate = new Date();
+					appointmentDate.setDate(appointmentDate.getDate() + 1);
+					_this.$set(_this.tags,1,{type:"warning",txt:"明天到期:"+ res.data+" 条",appointmentDate:appointmentDate});
 				});
             	countAppointment({delta:2} , _this).then(function (res) {
 					if(!res){
 						return;
 					}
-					_this.$set(_this.tags,2,{type:"success",txt:"后天到期:"+ res.data+" 条"});
+					let appointmentDate = new Date();
+					appointmentDate.setDate(appointmentDate.getDate() + 2);
+					_this.$set(_this.tags,2,{type:"success",txt:"后天到期:"+ res.data+" 条",appointmentDate:appointmentDate});
 				});
             	expiredAppointment({} , _this).then(function (res) {
 					if(!res){
 						return;
 					}
-					_this.$set(_this.tags,3,{type:"info",txt:"已经过期:"+ res.data+" 条"});
+					_this.$set(_this.tags,3,{type:"info",txt:"已经过期:"+ res.data+" 条",state:"EXPIRED"});
 				});
+			},
+			search:function (tag) {
+            	let _this = this;
+            	console.info(tag);
+            	_this.filters.appointmentDate = tag.appointmentDate;
+            	_this.filters.state = tag.state;
+            	_this.getContents();
 			}
 		},
 		mounted() {

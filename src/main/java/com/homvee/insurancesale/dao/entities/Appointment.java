@@ -29,10 +29,8 @@ public class Appointment extends BaseEntity {
      * @see AppointmentSateEnum
      * */
     private String state;
-    /**预约开始时间*/
-    private Date startDate;
-    /**预约结束时间*/
-    private Date endDate;
+    /**预约时间*/
+    private Date appointmentDate;
     /**预约备注*/
     private String note;
 }

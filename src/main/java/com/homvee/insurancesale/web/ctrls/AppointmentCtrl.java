@@ -59,7 +59,7 @@ public class AppointmentCtrl extends BaseCtrl {
         AppointmentVO vo  = new AppointmentVO();
         vo.setSaleManId(getUser().getId());
         vo.setYn(YNEnum.YES.getVal());
-        vo.setEndDate(endDate);
+        vo.setAppointmentDate(endDate);
         Long cnt = appointmentService.count(vo);
         return Msg.success(cnt);
     }
