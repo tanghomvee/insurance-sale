@@ -54,7 +54,7 @@ public class CustomerCtrl extends BaseCtrl {
     }
 
     private Msg chk(){
-        Set<Long> keys = COUNT.keySet();
+       /* Set<Long> keys = COUNT.keySet();
         for (Long key : keys){
             Counter counter = COUNT.get(getUser().getId());
             if (counter == null){
@@ -74,7 +74,7 @@ public class CustomerCtrl extends BaseCtrl {
         if (counter.getCnt() > MAX){
             return Msg.error("查询次数已用完");
         }
-        counter.incr();
+        counter.incr();*/
         return Msg.success();
     }
 
