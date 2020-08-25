@@ -27,8 +27,8 @@
 			</el-table-column>
 			<el-table-column prop="carNo" label="车牌" width="auto">
 			</el-table-column>
-			<el-table-column prop="frameNo" label="车架" width="auto">
-			</el-table-column>
+			<!--<el-table-column prop="frameNo" label="车架" width="auto">
+			</el-table-column>-->
 			<el-table-column prop="ownerName" label="姓名" width="auto">
 			</el-table-column>
 			<el-table-column prop="licenseDate" label="发牌日期" width="auto">
@@ -60,9 +60,9 @@
 				<el-form-item label="车牌">
 					<el-input type="input" v-model="detailForm.carNo" :disabled="true" ></el-input>
 				</el-form-item>
-				<el-form-item label="车架">
+				<!--<el-form-item label="车架">
 					<el-input type="input" v-model="detailForm.frameNo" :disabled="true"></el-input>
-				</el-form-item>
+				</el-form-item>-->
 				<el-form-item label="姓名">
 					<el-input type="input" v-model="detailForm.ownerName" :disabled="true"></el-input>
 				</el-form-item>
